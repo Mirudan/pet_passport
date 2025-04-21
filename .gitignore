@@ -95,36 +95,30 @@ ipython_config.py
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
 
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.env
 venv/
-ENV/
-env.bak/
-venv.bak/
+.venv/
 
-# Spyder project settings
-.spyderproject
-.spyproject
+# Docker
+**/data/
+**/logs/
+*.log
+docker-compose.override.yml
 
-# Rope project settings
-.ropeproject
+# IDE
+.vscode/
+.idea/
 
-# mkdocs documentation
-/site
+# Database
+*.db
+*.sqlite3
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
+# Aiogram session files
+*.session
 
-# Pyre type checker
-.pyre/
+# Файлы окружения (кроме примера)
+!.env.example
