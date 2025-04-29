@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, Float, String, Date, ForeignKey
+from sqlalchemy import Column, Integer, Float, String, Date, ForeignKey, Enum, Interval, CheckConstraint
 from sqlalchemy.orm import relationship
+from datetime import date, timedelta
 from .database import Base
 
 
@@ -37,6 +38,7 @@ class Pet(Base):
         back_populates="pet",  # Обратная связь
         order_by="WeightRecord.date.desc()"  # Сортировка по дате (новые сверху)
     )
+    procedures = relationship("Procedure", back_populates="pet", cascade="all, delete")
 
     @property
     def last_weights(self):
@@ -59,3 +61,39 @@ class WeightRecord(Base):
     date = Column(Date, nullable=False)
     unit = Column(String(1), default='g')
     pet = relationship("Pet", back_populates="weight_history")
+
+
+class ProcedureType(str, Enum):
+    """
+    Модель с типами процедур
+    """
+    VACCINATION = "vaccination"
+    PARASITE_TREATMENT = "parasite_treatment"
+
+
+class Procedure(Base):
+    """
+    Модель с процедурами
+    """
+    __tablename__ = "procedures"
+    __table_args__ = (
+        CheckConstraint("type IN ('vaccination', 'parasite_treatment')", name="valid_procedure_type"),
+    )
+
+    id = Column(Integer, primary_key=True)
+    type = Column(String(20), nullable=False)
+    name = Column(String(100), nullable=False)
+    date_performed = Column(Date, nullable=False, default=date.today())
+    validity_days = Column(Integer, nullable=False)
+    next_due_date = Column(Date)
+    pet_id = Column(Integer, ForeignKey("pets.id"), nullable=False)
+    pet = relationship("Pet", back_populates="procedures")
+
+    def __init__(self, **kwargs):
+        """
+        Автоматический расчет следующей даты процедуры (next_due_date)
+        :param kwargs: именованные аргументы в виде словаря.
+        """
+        super().__init__(**kwargs)
+        if self.date_performed and self.validity_days:
+            self.next_due_date = self.date_performed + timedelta(days=self.validity_days)
