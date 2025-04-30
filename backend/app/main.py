@@ -1,18 +1,20 @@
 from fastapi import FastAPI
-from .database import engine, Base
-from contextlib import \
-    asynccontextmanager  # декоратор для создания асинхронного контекстного менеджера (управляет жизненным циклом приложения)
+from app.routers import users
 
+# Создаем экземпляр FastAPI приложения
+app = FastAPI(
+    title="Pet Passport API",
+    description="API для управления паспортами питомцев",
+    version="0.1.0"
+)
 
-# Создаем таблицы БД при старте приложения для теста
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    yield
+# Подключаем роутер с пользовательскими эндпоинтами
+app.include_router(users.router)
 
-app = FastAPI(lifespan=lifespan)
-
-@app.get("/healthcheck")
-async def healthcheck():
-    return {"status": "ok"}
+# Простейший тестовый эндпоинт для проверки работы
+@app.get("/", tags=["Healthcheck"])
+async def root():
+    return {
+        "message": "Pet Passport API работает!",
+        "documentation": "/docs или /redoc"
+    }
