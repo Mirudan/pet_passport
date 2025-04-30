@@ -7,12 +7,9 @@ load_dotenv()  # Загружаем переменные из .env
 
 # Настройки подключения к PostgreSQL
 # Формат URL: postgresql+asyncpg://user:password@host:port/db_name
-POSTGRES_URL = (
-    f"postgresql+asyncpg://{getenv('POSTGRES_USER')}:{getenv('POSTGRES_PASSWORD')}"
-    f"@{getenv('POSTGRES_HOST')}:{getenv('POSTGRES_PORT')}/{getenv('POSTGRES_DB')}"
-)
+SQLALCHEMY_DATABASE_URL = (getenv("SQLALCHEMY_DATABASE_URL"))
 
-engine = create_async_engine(POSTGRES_URL, echo=True)  # echo=True для логирования SQL
+engine = create_async_engine(SQLALCHEMY_DATABASE_URL, echo=True)  # echo=True для логирования SQL
 Base = declarative_base()
 
 # Асинхронная сессия для работы с БД

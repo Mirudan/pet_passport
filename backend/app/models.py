@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, Float, String, Date, ForeignKey, Enum, Interval, CheckConstraint
 from sqlalchemy.orm import relationship
 from datetime import date, timedelta
-from .database import Base
+from app.database import Base
 
 
 class User(Base):
@@ -29,10 +29,12 @@ class Pet(Base):
     """
     __tablename__ = "pets"
 
+    id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     animal_type = Column(String(50))
     birth_date = Column(Date)
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    owner = relationship("User", back_populates="pets")
     weight_history = relationship(
         "WeightRecord",
         back_populates="pet",  # Обратная связь

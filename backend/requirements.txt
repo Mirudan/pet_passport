@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 python-dotenv
+alembic
 sqlalchemy
 psycopg2-binary
 asyncpg            # Для асинхронного PostgreSQL
