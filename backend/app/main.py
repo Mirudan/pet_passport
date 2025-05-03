@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import users
+from app.routers import users, pets
 
 # Создаем экземпляр FastAPI приложения
 app = FastAPI(
@@ -10,6 +10,7 @@ app = FastAPI(
 
 # Подключаем роутер с пользовательскими эндпоинтами
 app.include_router(users.router)
+app.include_router(pets.router)
 
 # Простейший тестовый эндпоинт для проверки работы
 @app.get("/", tags=["Healthcheck"])
