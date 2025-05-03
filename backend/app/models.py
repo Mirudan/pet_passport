@@ -59,8 +59,8 @@ class WeightRecord(Base):
 
     id = Column(Integer, primary_key=True)
     pet_id = Column(Integer, ForeignKey("pets.id"), nullable=False)
-    weight = Column(Float, nullable=False)
-    date = Column(Date, nullable=False)
+    weight_kg = Column(Float, nullable=False)
+    measurement_date = Column(Date, nullable=False)
     unit = Column(String(1), default='g')
     pet = relationship("Pet", back_populates="weight_history")
 
@@ -83,7 +83,7 @@ class Procedure(Base):
     )
 
     id = Column(Integer, primary_key=True)
-    type = Column(String(20), nullable=False)
+    procedure_type = Column(String(20), nullable=False)
     name = Column(String(100), nullable=False)
     date_performed = Column(Date, nullable=False, default=date.today())
     validity_days = Column(Integer, nullable=False)
